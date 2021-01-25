@@ -1,11 +1,14 @@
-export const isFalsy = (val: any) => (!val && val !== 0 ? true : false);
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
-export const cleanObject = (object: { [key: string]: any }) => {
-  const result: { [key: string]: any } = {};
-  Object.keys(object).forEach((key) => {
-    const val = object[key];
-    if (!isFalsy(val)) {
-      result[key] = val;
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
+
+export const cleanObject = (object: { [key: string]: unknown }) => {
+  const result = { ...object };
+  Object.keys(result).forEach((key) => {
+    const value = result[key];
+    if (isVoid(value)) {
+      delete result[key];
     }
   });
   return result;

@@ -1,56 +1,20 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Project } from "screens/project-list/list";
 
-interface User {
+export interface User {
+  id: number | string;
   name: string;
-  personId: string | number;
-  id?: string | number;
+  email: string;
+  title: string;
+  organization: string;
+  token: string;
 }
 
+interface SearchPanelProps {
+  users: User[];
+  param: Partial<Pick<Project, "name" | "personId">>;
+  setParam: (param: SearchPanelProps["param"]) => void;
+}
 export const SearchPanel = () => {
-  const [param, setParam] = useState<User>({
-    name: "",
-    personId: "",
-    id: "",
-  });
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    fetch("").then(async (response) => {
-      if (response.ok) {
-      }
-    });
-  }, [param]);
-
-  return (
-    <form>
-      <div>
-        <input
-          type="text"
-          value={param.name}
-          onChange={(e) =>
-            setParam({
-              ...param,
-              name: e.target.value,
-            })
-          }
-        />
-        <select
-          value={param.personId}
-          onChange={(e) =>
-            setParam({
-              ...param,
-              personId: e.target.value,
-            })
-          }
-        >
-          <option value={""}>负责人</option>
-          {users.map((user, index) => (
-            <option key={index} value={user.id}>
-              {user.name}
-            </option>
-          ))}
-        </select>
-      </div>
-    </form>
-  );
+  return <form></form>;
 };

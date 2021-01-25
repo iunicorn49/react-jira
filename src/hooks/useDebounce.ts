@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const useDebounce = (func: Function, delay = 1000) => {
+const useDebounce = (func: Function, delay?: number) => {
   const timer = useRef<any>(null);
   if (timer.current) {
     clearTimeout(timer.current);
