@@ -90,3 +90,19 @@ export const subset = <
   );
   return Object.fromEntries(filteredEntries) as Pick<O, K>;
 };
+
+/**
+ * 用来返回组件的挂在状态, 如果还没挂在或者已经卸载, 返回 false, 反之, 返回 true
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+
+  return mountedRef;
+};
