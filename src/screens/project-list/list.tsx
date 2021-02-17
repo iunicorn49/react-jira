@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/project";
 import { ButtonNoPadding } from "components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "./project-list.slice";
 
 export interface Project {
   id: number;
@@ -18,16 +20,20 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[];
-  projectButton: JSX.Element;
   refresh: () => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
-  const { projectButton } = props;
-
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
+
+  const dispatch = useDispatch();
+
+  const handleEditProject = () => {
+    dispatch(projectListActions.openProjectModal());
+  };
+
   return (
     <Table
       rowKey={"id"}
@@ -85,7 +91,14 @@ export const List = ({ users, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key="edit">{projectButton}</Menu.Item>
+                    <Menu.Item key="edit">
+                      <ButtonNoPadding
+                        type="link"
+                        onClick={() => handleEditProject()}
+                      >
+                        修改
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >
