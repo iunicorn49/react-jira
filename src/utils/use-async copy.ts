@@ -1,5 +1,4 @@
-import { useCallback, useReducer, useState } from "react";
-
+import { useCallback, useState } from "react";
 import { useMountedRef } from "utils";
 
 interface State<D> {
@@ -18,49 +17,37 @@ const defaultConfig = {
   throwOnError: false,
 };
 
-const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
-  const mountedRef = useMountedRef();
-  return useCallback(
-    (...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0),
-    [dispatch, mountedRef]
-  );
-};
-
 export const useAsync = <D>(
   initialState?: State<D>,
   initialConfig?: typeof defaultConfig
 ) => {
   const config = { ...defaultConfig, ...initialConfig };
-  const [state, dispatch] = useReducer(
-    (state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }),
-    {
-      ...defaultInitialState,
-      ...initialState,
-    }
-  );
-
-  const safeDispatch = useSafeDispatch(dispatch);
+  const [state, setState] = useState<State<D>>({
+    ...defaultInitialState,
+    ...initialState,
+  });
+  const mountedRef = useMountedRef();
 
   const [retry, setRetry] = useState(() => () => {});
 
   const setData = useCallback(
     (data: D) =>
-      safeDispatch({
+      setState({
         data,
         stat: "success",
         error: null,
       }),
-    [safeDispatch]
+    []
   );
 
   const setError = useCallback(
     (error: Error) =>
-      safeDispatch({
+      setState({
         error,
         stat: "error",
         data: null,
       }),
-    [safeDispatch]
+    []
   );
 
   // run 用来触发异步请求
@@ -74,20 +61,24 @@ export const useAsync = <D>(
           run(runConfig.retry(), runConfig);
         }
       });
-      safeDispatch({ stat: "loading" });
+      setState((prevState) => ({ ...prevState, stat: "loading" }));
       return promise
         .then((data) => {
-          setData(data);
+          if (mountedRef.current) {
+            setData(data);
+          }
           return data;
         })
         .catch((error) => {
           // catch会消化异常，如果不主动抛出，外面是接收不到异常的
-          setError(error);
+          if (mountedRef.current) {
+            setError(error);
+          }
           if (config.throwOnError) return Promise.reject(error);
           return error;
         });
     },
-    [config.throwOnError, safeDispatch, setData, setError]
+    [config.throwOnError, mountedRef, setData, setError]
   );
 
   return {
