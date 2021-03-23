@@ -8,8 +8,8 @@ type SelectProps = React.ComponentProps<typeof Select>;
 // 为了防止和SelectProps冲突, 我们在继承SelectProps的时候, 通过Omit来删除 SelectProps原本的 这三个属性
 interface IdSelectProps
   extends Omit<SelectProps, "value" | "onChange" | "options"> {
-  value: Raw | null | undefined;
-  onChange: (value?: number) => void;
+  value?: Raw | null | undefined;
+  onChange?: (value?: number) => void;
   defaultOptionName?: string;
   options?: { name: string; id: number }[];
 }
@@ -20,7 +20,7 @@ export const IdSelect = (props: IdSelectProps) => {
     <Select
       value={options?.length ? toNumber(value) : 0}
       onChange={(value) => {
-        onChange(toNumber(value) || undefined);
+        onChange?.(toNumber(value) || undefined);
       }}
       {...restProps}
     >
