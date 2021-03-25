@@ -6558,7 +6558,7 @@ husky-run@^0.0.0:
   resolved "https://registry.npm.taobao.org/husky-run/download/husky-run-0.0.0.tgz#b1ec3808d781ca0811d1f69b88ea345455476900"
   integrity sha1-sew4CNeByggR0fabiOo0VFVHaQA=
 
-husky@>=4:
+husky@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npm.taobao.org/husky/download/husky-5.2.0.tgz#fc5e1c2300d34855d47de4753607d00943fc0802"
   integrity sha1-/F4cIwDTSFXUfeR1NgfQCUP8CAI=
