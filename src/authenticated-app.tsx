@@ -11,6 +11,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { resetRoute } from "utils";
 import { ProjectModal } from "screens/project-list/project-modal";
 import { ProjectPopover } from "components/project-popover";
+import DemoPage from "demo-page";
 
 /**
  * grid 和 flex 各自的应用场景
@@ -31,11 +32,12 @@ export const AuthenticatedApp = () => {
         <PageHeader />
         <Main>
           <Routes>
-            <Route path={"/projects"} element={<ProjectListScreen />}></Route>
+            <Route path="/demo/*" element={<DemoPage />} />
+            <Route path={"/projects"} element={<ProjectListScreen />} />
             <Route
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
-            ></Route>
+            />
             <Navigate to="/projects" />
           </Routes>
         </Main>
